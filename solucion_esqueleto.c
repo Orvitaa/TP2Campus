@@ -85,7 +85,7 @@ char* strDuplicate(char* src) {
     while(src[i]!=0){
         i++;
     }
-    if src == 0{
+    if (src == 0){
         return 0;
     }
     char* res = (char*) malloc(sizeof(char)*(i + 1)); //Pido memoria para alojar un puntero a char de largo i+1 (por el \0)
@@ -101,6 +101,17 @@ char* strDuplicate(char* src) {
 int strCompare(char* s1, char* s2) {
     // TODO: Devolver 0 si son iguales, 1 si s1 < s2, -1 si s1 > s2.
     //       Ojo: es la convencion INVERSA a strcmp.
+    int i = 0;
+    while (s1[i] == s2[i] && s1[i]!=0){
+        i++;
+    }
+    if (s1[i]<s2[i]){
+        return 1;
+    }
+    if (s1[i]>s2[i]){
+        return -1;
+    }
+
     return 0;
 }
 
