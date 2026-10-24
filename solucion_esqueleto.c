@@ -81,7 +81,21 @@ GameBoard* game_board = NULL;
 char* strDuplicate(char* src) {
     // TODO: Contar los caracteres de src, reservar con malloc (no olvidar el '\0'),
     //       copiar todo y devolver el puntero nuevo.
-    return NULL;
+    int i = 0;
+    while(src[i]!=0){
+        i++;
+    }
+    if src == 0{
+        return 0;
+    }
+    char* res = (char*) malloc(sizeof(char)*(i + 1)); //Pido memoria para alojar un puntero a char de largo i+1 (por el \0)
+    
+    for(int j = 0; j<i; j++){
+        res[j] = src[j];
+    }
+    res[i] = 0;
+
+    return res;
 }
 
 int strCompare(char* s1, char* s2) {
