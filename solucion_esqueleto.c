@@ -102,9 +102,6 @@ int strCompare(char* s1, char* s2) {
     // TODO: Devolver 0 si son iguales, 1 si s1 < s2, -1 si s1 > s2.
     //       Ojo: es la convencion INVERSA a strcmp.
     int i = 0;
-    if (s1==0 || s2==0){
-        return 0;
-    }
     while (s1[i] == s2[i] && s1[i]!=0){
         i++;
     }
@@ -121,7 +118,26 @@ int strCompare(char* s1, char* s2) {
 char* strConcatenate(char* src1, char* src2) {
     // TODO: Reservar un string nuevo con src1 seguido de src2, y liberar src1 y src2.
     //       Precondicion: src1 y src2 vienen de malloc y son punteros distintos.
-    return NULL;
+    int i = 0;
+    while (src1[i]!=0){
+        i++;
+    }
+    int j = 0;
+    while (src2[j]!=0){
+        j++;
+    }
+    char* res = (char*) malloc(sizeof(char)*((i+j+1))); //Pido memoria para alojar un puntero a char de largo i+1 (por el \0)
+    for(int k=0; k<i; k++){
+        res[k] = src1[k];
+    }
+    for(int k=0; k<j; k++){
+        res[i+k] = src2[k];
+    }
+    res[i+j] = 0;
+
+    free(src1);
+    free(src2);
+    return res;
 }
 
 // ========= EJERCICIO 2: FUNCIONES A IMPLEMENTAR (EL TP) =========
