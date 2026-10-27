@@ -79,27 +79,33 @@ SDL_Renderer *renderer = NULL;
 GameBoard *game_board = NULL;
 
 // ========= EJERCICIO 1: STRINGS (NO USAR string.h) =========
-
+int lenstr(char* str){
+    //Auxiliar. Devuelve la longitud del string (no se cuenta el \0)
+    int len = 0;
+    while (str!=0){
+        len++;
+    }
+    return len;
+}
 char *strDuplicate(char *src)
 {
     // TODO: Contar los caracteres de src, reservar con malloc (no olvidar el '\0'),
     //       copiar todo y devolver el puntero nuevo.
-    int i = 0;
-    while (src[i] != 0)
-    {
-        i++;
-    }
-    if (src == 0)
+    int len = lenstr(src);
+    if (src == 0) //Devuelve 0 si el src es vacío.
     {
         return 0;
     }
-    char *res = (char *)malloc(sizeof(char) * (i + 1)); // Pido memoria para alojar un puntero a char de largo i+1 (por el \0)
-
-    for (int j = 0; j < i; j++)
+    char *res = (char *)malloc(sizeof(char) * (len + 1)); // Pido memoria para alojar el string resultado de largo len+1 (por el \0)
+    if (res==NULL){ //Devuelve 0 si no hay memoria disponible para alojar res.
+        free(res);
+        return 0;
+    }
+    for (int j = 0; j < len; j++)
     {
         res[j] = src[j];
     }
-    res[i] = 0;
+    res[len] = 0;
 
     return res;
 }
@@ -109,11 +115,11 @@ int strCompare(char *s1, char *s2)
     // TODO: Devolver 0 si son iguales, 1 si s1 < s2, -1 si s1 > s2.
     //       Ojo: es la convencion INVERSA a strcmp.
     int i = 0;
-    while (s1[i] == s2[i] && s1[i] != 0)
+    while (s1[i] == s2[i] && s1[i] != 0) //Aumenta la posición mientras los caracteres sean iguales y ningun string termine
     {
         i++;
     }
-    if (s1[i] < s2[i])
+    if (s1[i] < s2[i]) //Al llegar a la posición donde hay diferencias, compara.
     {
         return 1;
     }
@@ -129,6 +135,11 @@ char *strConcatenate(char *src1, char *src2)
 {
     // TODO: Reservar un string nuevo con src1 seguido de src2, y liberar src1 y src2.
     //       Precondicion: src1 y src2 vienen de malloc y son punteros distintos.
+    if (src1 == NULL || src2== NULL){
+        free(src1);
+        free(src2);
+        return NULL;
+    }
     int i = 0;
     while (src1[i] != 0)
     {
@@ -139,8 +150,13 @@ char *strConcatenate(char *src1, char *src2)
     {
         j++;
     }
-    char *res = (char *)malloc(sizeof(char) * ((i + j + 1))); // Pido memoria para alojar un puntero a char de largo i+1 (por el \0)
-    //Agregar manejo de error.
+    char *res = (char *)malloc(sizeof(char) * ((i + j + 1))); // Pido memoria para alojar el string resultado de largo i+j+1 (por el \0)
+    if (res == NULL){
+        free(src1);
+        free(src2);
+        free(res);
+        return NULL;
+    }
     for (int k = 0; k < i; k++)
     {
         res[k] = src1[k];
@@ -164,7 +180,7 @@ GameBoard *gameBoardNew()
     // TODO: Usar un bucle para hacer malloc de las 20 filas (RowNode) y conectarlas.
     // TODO: El puntero first_row debe apuntar al primero de esos nodos.
     // TODO: Inicializar queue_head, queue_tail y first_particle en NULL.
-    GameBoard *nuevo_gameBoard = (GameBoard *)malloc(sizeof(GameBoard));
+    GameBoard *nuevo_gameBoard = (GameBoard *)malloc(sizeof(GameBoard)); //Pido memoria para un gameBoard.
     if (nuevo_gameBoard == NULL)
     {
         free(nuevo_gameBoard);
@@ -181,8 +197,8 @@ GameBoard *gameBoardNew()
     int i = 0;
     while (i < 20)
     {
-        RowNode *row = (RowNode *)malloc(sizeof(RowNode));
-        if (row == NULL){
+        RowNode *row = (RowNode *)malloc(sizeof(RowNode)); //Por cada iteración, se pide memoria para una fila.
+        if (row == NULL){ //Recorro la lista para liberar todo.
             RowNode* curr = nuevo_gameBoard->first_row;
             while (curr!=0){
                 RowNode* sig = curr->next;
@@ -199,7 +215,8 @@ GameBoard *gameBoardNew()
             row->cells[j] = 0;
             j++;
         }
-        row->next = nuevo_gameBoard->first_row; //Apunta al siguiente
+
+        row->next = nuevo_gameBoard->first_row; //Apunta al siguiente. 
         nuevo_gameBoard->first_row = row; //El nuevo nodo es la cabeza de la lista, apuntado por first_row
 
         i++; //Avanza al siguiente "nuevo elemento"
