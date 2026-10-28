@@ -80,10 +80,12 @@ SDL_Renderer *renderer = NULL;
 GameBoard *game_board = NULL;
 
 // ========= EJERCICIO 1: STRINGS (NO USAR string.h) =========
-int lenstr(char* str){
-    //Auxiliar. Devuelve la longitud del string (no se cuenta el \0)
+int lenstr(char *str)
+{
+    // Auxiliar. Devuelve la longitud del string (no se cuenta el \0)
     int len = 0;
-    while (str[len]!=0){
+    while (str[len] != 0)
+    {
         len++;
     }
     return len;
@@ -93,12 +95,13 @@ char *strDuplicate(char *src)
     // TODO: Contar los caracteres de src, reservar con malloc (no olvidar el '\0'),
     //       copiar todo y devolver el puntero nuevo.
     int len = lenstr(src);
-    if (src == 0) //Devuelve 0 si el src es vacío.
+    if (src == 0) // Devuelve 0 si el src es vacío.
     {
         return 0;
     }
     char *res = (char *)malloc(sizeof(char) * (len + 1)); // Pido memoria para alojar el string resultado de largo len+1 (por el \0)
-    if (res==NULL){ //Devuelve 0 si no hay memoria disponible para alojar res.
+    if (res == NULL)
+    { // Devuelve 0 si no hay memoria disponible para alojar res.
         free(res);
         return 0;
     }
@@ -116,11 +119,11 @@ int strCompare(char *s1, char *s2)
     // TODO: Devolver 0 si son iguales, 1 si s1 < s2, -1 si s1 > s2.
     //       Ojo: es la convencion INVERSA a strcmp.
     int i = 0;
-    while (s1[i] == s2[i] && s1[i] != 0) //Aumenta la posición mientras los caracteres sean iguales y ningun string termine
+    while (s1[i] == s2[i] && s1[i] != 0) // Aumenta la posición mientras los caracteres sean iguales y ningun string termine
     {
         i++;
     }
-    if (s1[i] < s2[i]) //Al llegar a la posición donde hay diferencias, compara.
+    if (s1[i] < s2[i]) // Al llegar a la posición donde hay diferencias, compara.
     {
         return 1;
     }
@@ -136,7 +139,8 @@ char *strConcatenate(char *src1, char *src2)
 {
     // TODO: Reservar un string nuevo con src1 seguido de src2, y liberar src1 y src2.
     //       Precondicion: src1 y src2 vienen de malloc y son punteros distintos.
-    if (src1 == NULL || src2== NULL){
+    if (src1 == NULL || src2 == NULL)
+    {
         free(src1);
         free(src2);
         return NULL;
@@ -152,7 +156,8 @@ char *strConcatenate(char *src1, char *src2)
         j++;
     }
     char *res = (char *)malloc(sizeof(char) * ((i + j + 1))); // Pido memoria para alojar el string resultado de largo i+j+1 (por el \0)
-    if (res == NULL){
+    if (res == NULL)
+    {
         free(src1);
         free(src2);
         free(res);
@@ -181,7 +186,7 @@ GameBoard *gameBoardNew()
     // TODO: Usar un bucle para hacer malloc de las 20 filas (RowNode) y conectarlas.
     // TODO: El puntero first_row debe apuntar al primero de esos nodos.
     // TODO: Inicializar queue_head, queue_tail y first_particle en NULL.
-    GameBoard *nuevo_gameBoard = (GameBoard *)malloc(sizeof(GameBoard)); //Pido memoria para un gameBoard.
+    GameBoard *nuevo_gameBoard = (GameBoard *)malloc(sizeof(GameBoard)); // Pido memoria para un gameBoard.
     if (nuevo_gameBoard == NULL)
     {
         free(nuevo_gameBoard);
@@ -193,16 +198,18 @@ GameBoard *gameBoardNew()
     nuevo_gameBoard->queue_tail = NULL;
     nuevo_gameBoard->first_particle = NULL;
     nuevo_gameBoard->first_row = NULL;
-    nuevo_gameBoard->current_piece.active = 0; //Si la pieza no está activa no importa todo lo demás.
+    nuevo_gameBoard->current_piece.active = 0; // Si la pieza no está activa no importa todo lo demás.
 
     int i = 0;
     while (i < 20)
     {
-        RowNode *row = (RowNode *)malloc(sizeof(RowNode)); //Por cada iteración, se pide memoria para una fila.
-        if (row == NULL){ //Recorro la lista para liberar todo.
-            RowNode* curr = nuevo_gameBoard->first_row;
-            while (curr!=0){
-                RowNode* sig = curr->next;
+        RowNode *row = (RowNode *)malloc(sizeof(RowNode)); // Por cada iteración, se pide memoria para una fila.
+        if (row == NULL)
+        { // Recorro la lista para liberar todo.
+            RowNode *curr = nuevo_gameBoard->first_row;
+            while (curr != 0)
+            {
+                RowNode *sig = curr->next;
                 free(curr);
                 curr = sig;
             }
@@ -217,10 +224,10 @@ GameBoard *gameBoardNew()
             j++;
         }
 
-        row->next = nuevo_gameBoard->first_row; 
-        nuevo_gameBoard->first_row = row; //El nuevo nodo es la cabeza de la lista, apuntado por first_row
+        row->next = nuevo_gameBoard->first_row;
+        nuevo_gameBoard->first_row = row; // El nuevo nodo es la cabeza de la lista, apuntado por first_row
 
-        i++; //Avanza al siguiente "nuevo elemento"
+        i++; // Avanza al siguiente "nuevo elemento"
     }
 
     return nuevo_gameBoard;
@@ -233,36 +240,40 @@ void gameBoardDelete(GameBoard *board)
     // TODO: Recorrer y liberar todos los PieceQueueNode.
     // TODO: Recorrer y liberar todos los ParticleNode.
     // TODO: Finalmente, liberar la estructura GameBoard.
-    if (board==NULL){   //Soporta board == NULL
+    if (board == NULL)
+    { // Soporta board == NULL
         free(board);
         return;
     }
 
-    RowNode * row = board-> first_row;
-    //Libero los RowNode
-    while(row!=NULL){
-        RowNode* sig = row->next;
+    RowNode *row = board->first_row;
+    // Libero los RowNode
+    while (row != NULL)
+    {
+        RowNode *sig = row->next;
         free(row);
         row = sig;
     }
 
-    ParticleNode * particle = board-> first_particle;
-    //Libero los ParticleNode
-    while(particle!=NULL){
-        ParticleNode* sig = particle->next;
+    ParticleNode *particle = board->first_particle;
+    // Libero los ParticleNode
+    while (particle != NULL)
+    {
+        ParticleNode *sig = particle->next;
         free(particle);
         particle = sig;
     }
 
-    PieceQueueNode * piece = board-> queue_head;
-    //Libero los PieceQueueNode; queue_tail ya está cubierto y no hace falta tocarlo.
-    while(piece!=NULL){
-        PieceQueueNode* sig = piece->next;
+    PieceQueueNode *piece = board->queue_head;
+    // Libero los PieceQueueNode; queue_tail ya está cubierto y no hace falta tocarlo.
+    while (piece != NULL)
+    {
+        PieceQueueNode *sig = piece->next;
         free(piece);
         piece = sig;
     }
-    
-    //Libero el board
+
+    // Libero el board
     free(board);
 }
 
@@ -272,7 +283,7 @@ void gameBoardAddParticle(GameBoard *board, float x, float y, int color)
     {
         return;
     }
-    ParticleNode *particula = (ParticleNode*)malloc(sizeof(ParticleNode)); //Creo el ParticleNode con memoria dinámica
+    ParticleNode *particula = (ParticleNode *)malloc(sizeof(ParticleNode)); // Creo el ParticleNode con memoria dinámica
 
     // Inicializo x, y, velocidades aleatorias y un life_timer
 
@@ -287,9 +298,8 @@ void gameBoardAddParticle(GameBoard *board, float x, float y, int color)
 
     // Agrego el nodo particula al principio de la lista enlazada simple de partículas.
 
-        particula->next = board->first_particle; //Apunta al siguiente. 
-        board->first_particle = particula; //El nodo particula es la cabeza de la lista, apuntado por first_row
-
+    particula->next = board->first_particle; // Apunta al siguiente.
+    board->first_particle = particula;       // El nodo particula es la cabeza de la lista, apuntado por first_row
 }
 
 int gameBoardCheckAndClearLines(GameBoard *board)
@@ -315,15 +325,17 @@ int gameBoardDequeuePiece(GameBoard *board, int *out_type)
     // TODO: Si la cola está vacía, retornar 0.
     // TODO: Extraer el primer nodo (queue_head).
     // TODO: Guardar el type en la variable out_type, liberar el nodo y actualizar el head.
-    if (board->queue_head==NULL){ 
+    if (board->queue_head == NULL)
+    {
         return 0;
     }
-    PieceQueueNode* piece = board->queue_head; 
-    PieceQueueNode* sig = piece->next; //Tomo el siguiente elemento con sig, pues al liberar piece no podría hacer piece->next.
+    PieceQueueNode *piece = board->queue_head;
+    PieceQueueNode *sig = piece->next; // Tomo el siguiente elemento con sig, pues al liberar piece no podría hacer piece->next.
     *out_type = piece->type;
-    free(piece); 
-    board->queue_head = sig; 
-    if (sig==NULL){ //Si había un único elemento, queue_head y queue_tail eran iguales, por lo que quiero que queue_tail también apunte a NULL.
+    free(piece);
+    board->queue_head = sig;
+    if (sig == NULL)
+    { // Si había un único elemento, queue_head y queue_tail eran iguales, por lo que quiero que queue_tail también apunte a NULL.
         board->queue_tail = NULL;
     }
 
@@ -549,23 +561,82 @@ void correrTests()
     free(s1);
 
     char *s2 = strDuplicate("x");
-    assert(strCompare(s1, "x") == 0);
+    assert(strCompare(s2, "x") == 0);
     free(s2);
 
     char *s3 = strDuplicate("TesteoGrande123!?");
-    assert(strCompare(s1, "TesteoGrande123!?") == 0);
+    assert(strCompare(s3, "TesteoGrande123!?") == 0);
     free(s3);
-    
-    //  - strCompare: "" vs "", "a" vs "a", y una desigualdad en ambos sentidos (s1/s2 y s2/s1).
-    int s1 = strCompare("", "");
-    assert(s1 == 0);
 
-    int s2 = strCompare("a", "a");
-    assert(s2 == 0);
+    //  - strCompare: "" vs "", "a" vs "a", y una desigualdad en ambos sentidos (s1/s2 y s2/s1).
+    assert(strCompare("", "") == 0);
+    assert(strCompare("a", "a") == 0);
+    assert(strCompare("b", "c") == 1);
+    assert(strCompare("c", "b") == -1);
 
     //  - strConcatenate: "" + "abc" y "hola " + "mundo". Los argumentos deben crearse con
     //    strDuplicate, porque strConcatenate los libera (no pasar literales).
+    char *palabra1 = strDuplicate("");
+    char *palabra2 = strDuplicate("abc");
+    char *s1 = strConcatenate(palabra1, palabra2);
+    assert(strCompare(s1, "abc") == 0);
+    free(s1);
+
+    char *palabra3 = strDuplicate("hola");
+    char *palabra4 = strDuplicate("mundo");
+    char *s2 = strConcatenate(palabra3, palabra4);
+    assert(strCompare(s2, "holamundo") == 0);
+    free(s2);
+
     //  - Cola: 5 push y 6 pop; el 6to debe devolver 0 y dejar queue_head y queue_tail en NULL.
+    GameBoard *board = gameBoardNew();
+ 
+    assert(board->queue_head == NULL);
+    assert(board->queue_tail == NULL);
+
+    gameBoardEnqueuePiece(board, 1);
+    gameBoardEnqueuePiece(board, 2);
+    gameBoardEnqueuePiece(board, 3);
+    gameBoardEnqueuePiece(board, 4);
+    gameBoardEnqueuePiece(board, 5);
+
+    assert(board->queue_head != NULL);
+    assert(board->queue_tail != NULL);
+
+    int tipo;
+    assert(gameBoardDequeuePiece(board, &tipo) == 1);
+    assert(tipo == 1);
+
+    assert(gameBoardDequeuePiece(board, &tipo) == 1);
+    assert(tipo == 2);
+
+    assert(gameBoardDequeuePiece(board, &tipo) == 1);
+    assert(tipo == 3);
+
+    assert(gameBoardDequeuePiece(board, &tipo) == 1);
+    assert(tipo == 4);
+
+    assert(gameBoardDequeuePiece(board, &tipo) == 1);
+    assert(tipo == 5);
+
+    assert(gameBoardDequeuePiece(board, &tipo) == 0);
+
+    assert(board->queue_head == NULL);
+    assert(board->queue_tail == NULL);
+
+    gameBoardEnqueuePiece(board, 6);
+
+    assert(board->queue_head != NULL);
+    assert(board->queue_tail != NULL);
+
+    assert(gameBoardDequeuePiece(board, &tipo) == 1);
+    assert(tipo == 6);
+
+    assert(board->queue_head == NULL);
+    assert(board->queue_tail == NULL);
+
+    gameBoardDelete(board);
+
     //    Verificar tambien que un push posterior funcione.
     //  - Tablero: llenar la fila de indice 19 (la de abajo), llamar a
     //    gameBoardCheckAndClearLines y comprobar que first_row es la fila nueva vacia y que
