@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <assert.h>
 
 // ========= CONSTANTES DEL JUEGO =========
 #define SCREEN_WIDTH 500
@@ -532,7 +533,25 @@ void correrTests()
 {
     // TODO: Implementar los casos minimos del enunciado. Por ejemplo:
     //  - strDuplicate: "", "x", un string con distintos caracteres.
+    char *s1 = strDuplicate("");
+    assert(strCompare(s1, "") == 0);
+    free(s1);
+
+    char *s2 = strDuplicate("x");
+    assert(strCompare(s1, "x") == 0);
+    free(s2);
+
+    char *s3 = strDuplicate("TesteoGrande123!?");
+    assert(strCompare(s1, "TesteoGrande123!?") == 0);
+    free(s3);
+    
     //  - strCompare: "" vs "", "a" vs "a", y una desigualdad en ambos sentidos (s1/s2 y s2/s1).
+    int s1 = strCompare("", "");
+    assert(s1 == 0);
+
+    int s2 = strCompare("a", "a");
+    assert(s2 == 0);
+
     //  - strConcatenate: "" + "abc" y "hola " + "mundo". Los argumentos deben crearse con
     //    strDuplicate, porque strConcatenate los libera (no pasar literales).
     //  - Cola: 5 push y 6 pop; el 6to debe devolver 0 y dejar queue_head y queue_tail en NULL.
@@ -541,7 +560,6 @@ void correrTests()
     //    gameBoardCheckAndClearLines y comprobar que first_row es la fila nueva vacia y que
     //    la lista sigue teniendo 20 filas.
     // Liberar toda la memoria pedida en los tests (strings y tableros).
-    printf("Tests no implementados.\n");
 }
 
 // Compara contra "--test" sin depender de string.h ni del Ejercicio 1.
