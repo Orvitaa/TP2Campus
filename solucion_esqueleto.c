@@ -286,8 +286,8 @@ void gameBoardAddParticle(GameBoard *board, float x, float y, int color)
 
     // Agrego el nodo particula al principio de la lista enlazada simple de partículas.
 
-        particula->next = board->first_particle; //Apunta al siguiente. 
-        board->first_particle = particula; //El nodo particula es la cabeza de la lista, apuntado por first_row
+    particula->next = board->first_particle; //Apunta al siguiente. 
+    board->first_particle = particula; //El nodo particula es la cabeza de la lista, apuntado por first_row
 
 }
 
@@ -304,9 +304,28 @@ int gameBoardCheckAndClearLines(GameBoard *board)
 
 void gameBoardEnqueuePiece(GameBoard *board, int type)
 {
-    // TODO: Crear un PieceQueueNode con el 'type'.
-    // TODO: Insertarlo al final de la cola (queue_tail) y actualizar punteros.
-    printf("Función gameBoardEnqueuePiece no implementada.\n");
+    if (board == NULL)
+    {
+        return;
+    }
+    PieceQueueNode *filanode = (PieceQueueNode*)malloc(sizeof(PieceQueueNode));
+    filanode->type = type; // Creo el PieceQueueNode con el 'type'
+    filanode->next = NULL; // Lo inicializo con NULL asi no queda memoria basura. Como es el último elemento, su next es NULL
+
+    // Inserto al final de la cola y actualizo punteros. Separo en dos casos.
+
+    if (board->queue_head == NULL)
+    {
+    // Caso 1: la cola está vacía
+        board->queue_head = filanode;
+        board->queue_tail = filanode;
+    } 
+    else 
+    {
+    // Caso 2: la cola no está vacía
+        board->queue_tail->next = filanode; // Conecto filanode al final
+        board->queue_tail = filanode;       // Actualizo
+    }
 }
 
 int gameBoardDequeuePiece(GameBoard *board, int *out_type)
