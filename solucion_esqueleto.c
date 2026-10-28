@@ -219,7 +219,7 @@ GameBoard *gameBoardNew()
         row->next = nuevo_gameBoard->first_row; //Apunta al siguiente. 
         nuevo_gameBoard->first_row = row; //El nuevo nodo es la cabeza de la lista, apuntado por first_row
 
-        i++; 
+        i++; //Avanza al siguiente "nuevo elemento"
     }
 
     return nuevo_gameBoard;
@@ -268,8 +268,21 @@ void gameBoardDelete(GameBoard *board)
 void gameBoardAddParticle(GameBoard *board, float x, float y, int color)
 {
     // TODO: Crear un ParticleNode con memoria dinámica.
+    if (board == NULL) return;
+    ParticleNode *particula = (ParticleNode*)malloc(sizeof(ParticleNode)); //Creo el ParticleNode con memoria dinámica
+
     // TODO: Inicializar x, y, velocidades aleatorias y un life_timer.
+
+    float x, y;
+    float vel_x, vel_y;
+    int color;
+    int life_timer;
+
     // TODO: Agregarlo al principio de la lista enlazada simple de partículas.
+
+        particula->next = GameBoard->first_particle; //Apunta al siguiente. 
+        GameBoard->first_particle = particula; //El nodo particula es la cabeza de la lista, apuntado por first_row
+
     printf("Función gameBoardAddParticle no implementada.\n");
 }
 
