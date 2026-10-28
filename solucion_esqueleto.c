@@ -82,7 +82,7 @@ GameBoard *game_board = NULL;
 int lenstr(char* str){
     //Auxiliar. Devuelve la longitud del string (no se cuenta el \0)
     int len = 0;
-    while (str!=0){
+    while (str[len]!=0){
         len++;
     }
     return len;
@@ -192,7 +192,7 @@ GameBoard *gameBoardNew()
     nuevo_gameBoard->queue_tail = NULL;
     nuevo_gameBoard->first_particle = NULL;
     nuevo_gameBoard->first_row = NULL;
-    nuevo_gameBoard->current_piece.active = 0;
+    nuevo_gameBoard->current_piece.active = 0; //Si la pieza no está activa no importa todo lo demás.
 
     int i = 0;
     while (i < 20)
@@ -216,7 +216,7 @@ GameBoard *gameBoardNew()
             j++;
         }
 
-        row->next = nuevo_gameBoard->first_row; //Apunta al siguiente. 
+        row->next = nuevo_gameBoard->first_row; 
         nuevo_gameBoard->first_row = row; //El nuevo nodo es la cabeza de la lista, apuntado por first_row
 
         i++; //Avanza al siguiente "nuevo elemento"
@@ -254,7 +254,7 @@ void gameBoardDelete(GameBoard *board)
     }
 
     PieceQueueNode * piece = board-> queue_head;
-    //Libero los PieceQueueNode
+    //Libero los PieceQueueNode; queue_tail ya está cubierto y no hace falta tocarlo.
     while(piece!=NULL){
         PieceQueueNode* sig = piece->next;
         free(piece);
@@ -309,8 +309,19 @@ int gameBoardDequeuePiece(GameBoard *board, int *out_type)
     // TODO: Si la cola está vacía, retornar 0.
     // TODO: Extraer el primer nodo (queue_head).
     // TODO: Guardar el type en la variable out_type, liberar el nodo y actualizar el head.
-    printf("Función gameBoardDequeuePiece no implementada.\n");
-    return 0;
+    if (board->queue_head==NULL){ 
+        return 0;
+    }
+    PieceQueueNode* piece = board->queue_head; 
+    PieceQueueNode* sig = piece->next; //Tomo el siguiente elemento con sig, pues al liberar piece no podría hacer piece->next.
+    *out_type = piece->type;
+    free(piece); 
+    board->queue_head = sig; 
+    if (sig==NULL){ //Si había un único elemento, queue_head y queue_tail eran iguales, por lo que quiero que queue_tail también apunte a NULL.
+        board->queue_tail = NULL;
+    }
+
+    return 1;
 }
 
 // ========= LOGICA DE DIBUJADO Y COLISIONES (NO MODIFICAR) =========
