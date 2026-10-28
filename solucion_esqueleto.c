@@ -219,7 +219,7 @@ GameBoard *gameBoardNew()
         row->next = nuevo_gameBoard->first_row; //Apunta al siguiente. 
         nuevo_gameBoard->first_row = row; //El nuevo nodo es la cabeza de la lista, apuntado por first_row
 
-        i++; //Avanza al siguiente "nuevo elemento"
+        i++; 
     }
 
     return nuevo_gameBoard;
@@ -232,7 +232,37 @@ void gameBoardDelete(GameBoard *board)
     // TODO: Recorrer y liberar todos los PieceQueueNode.
     // TODO: Recorrer y liberar todos los ParticleNode.
     // TODO: Finalmente, liberar la estructura GameBoard.
-    printf("Función gameBoardDelete no implementada.\n");
+    if (board==NULL){   //Soporta board == NULL
+        free(board);
+        return;
+    }
+
+    RowNode * row = board-> first_row;
+    //Libero los RowNode
+    while(row!=NULL){
+        RowNode* sig = row->next;
+        free(row);
+        row = sig;
+    }
+
+    ParticleNode * particle = board-> first_particle;
+    //Libero los ParticleNode
+    while(particle!=NULL){
+        ParticleNode* sig = particle->next;
+        free(particle);
+        particle = sig;
+    }
+
+    PieceQueueNode * piece = board-> queue_head;
+    //Libero los PieceQueueNode
+    while(piece!=NULL){
+        PieceQueueNode* sig = piece->next;
+        free(piece);
+        piece = sig;
+    }
+    
+    //Libero el board
+    free(board);
 }
 
 void gameBoardAddParticle(GameBoard *board, float x, float y, int color)
