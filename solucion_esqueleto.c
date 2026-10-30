@@ -299,9 +299,7 @@ void gameBoardAddParticle(GameBoard *board, float x, float y, int color)
     // Agrego el nodo particula al principio de la lista enlazada simple de partículas.
 
     particula->next = board->first_particle; // Apunta al siguiente.
-    board->first_particle = particula;       // El nodo particula es la cabeza de la lista, apuntado por first_row
-    particula->next = board->first_particle; //Apunta al siguiente. 
-    board->first_particle = particula; //El nodo particula es la cabeza de la lista, apuntado por first_row
+    board->first_particle = particula;       // El nodo particula es la cabeza de la lista, apuntado por first_particle
 
 }
 
