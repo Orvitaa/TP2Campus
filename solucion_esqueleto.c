@@ -600,15 +600,15 @@ void correrTests()
     //    strDuplicate, porque strConcatenate los libera (no pasar literales).
     char *palabra1 = strDuplicate("");
     char *palabra2 = strDuplicate("abc");
-    char *s1 = strConcatenate(palabra1, palabra2);
-    assert(strCompare(s1, "abc") == 0);
-    free(s1);
+    char *s4 = strConcatenate(palabra1, palabra2);
+    assert(strCompare(s4, "abc") == 0);
+    free(s4);
 
     char *palabra3 = strDuplicate("hola");
     char *palabra4 = strDuplicate("mundo");
-    char *s2 = strConcatenate(palabra3, palabra4);
-    assert(strCompare(s2, "holamundo") == 0);
-    free(s2);
+    char *s5 = strConcatenate(palabra3, palabra4);
+    assert(strCompare(s5, "holamundo") == 0);
+    free(s5);
 
     //  - Cola: 5 push y 6 pop; el 6to debe devolver 0 y dejar queue_head y queue_tail en NULL.
     GameBoard *board = gameBoardNew();
@@ -663,6 +663,32 @@ void correrTests()
     //  - Tablero: llenar la fila de indice 19 (la de abajo), llamar a
     //    gameBoardCheckAndClearLines y comprobar que first_row es la fila nueva vacia y que
     //    la lista sigue teniendo 20 filas.
+
+    GameBoard *board2 = gameBoardNew();
+    RowNode *fila19 = getRowAt(board2, 19);
+    for (int i=0; i<10; i++) {
+        fila19->cells[i] = 1;
+    }
+
+    assert(gameBoardCheckAndClearLines(board2) == 1);
+
+    RowNode *fila1 = board2->first_row;
+    for (int i=0; i<10; i++) {
+        assert(fila1->cells[i] == 0);
+    }
+
+    int contador = 0;
+    RowNode *actual = board2->first_row;
+
+    while (actual != NULL) {
+     contador++;
+     actual = actual->next;
+    }
+
+    assert(contador == 20);
+
+    gameBoardDelete(board2);
+
     // Liberar toda la memoria pedida en los tests (strings y tableros).
 }
 
