@@ -284,7 +284,9 @@ void gameBoardAddParticle(GameBoard *board, float x, float y, int color)
         return;
     }
     ParticleNode *particula = (ParticleNode *)malloc(sizeof(ParticleNode)); // Creo el ParticleNode con memoria dinámica
-
+    if(particula==NULL){
+        return;
+    }
     // Inicializo x, y, velocidades aleatorias y un life_timer
 
     particula->x = x;
@@ -310,8 +312,68 @@ int gameBoardCheckAndClearLines(GameBoard *board)
     // TODO: Crear un nuevo RowNode vacío (lleno de ceros).
     // TODO: Insertar el nuevo RowNode en la CABEZA del tablero (board->first_row).
     // TODO: Por cada celda destruida, invocar a gameBoardAddParticle().
-    printf("Función gameBoardCheckAndClearLines no implementada.\n");
-    return 0;
+
+    if(board==NULL){ //Tolera board NULL.
+        return 0;
+    }
+    RowNode* row = board->first_row;
+    RowNode* prev = NULL;
+    int cont_rows = 0; 
+    int cont_rows_deleted = 0; 
+    while (row!=NULL){
+        RowNode* sig = row->next;
+           
+        int cont_cols = 0;
+        for(int j = 0; j<GRID_COLS; j++){ //Cuenta las columnas no nulas de cada fila.
+            if(row->cells[j]>0){
+                cont_cols++;
+            }
+        }
+        
+        if(cont_cols==GRID_COLS){ //Convierto la fila en partículas y la saco de la lista.
+            int col = 0;
+            while(col<GRID_COLS){
+                gameBoardAddParticle(board, OFFSET_X + col * CELL_SIZE, OFFSET_Y + cont_rows * CELL_SIZE, row->cells[col]); // Convierto a las columnas y filas del tablero a píxeles con OFFSET y CELL_SIZE. El color es el valor de la celda.
+                col++;
+            }
+                
+            if(prev==NULL){ //Chequeo si el elemento es el primero.
+                board->first_row = sig;
+            }
+            else{
+            prev->next = sig;
+            }
+            free(row); 
+            cont_rows_deleted++;
+            row = sig; //prev no se actualiza al borrar el nodo, pues el nodo anterior sigue siendo el mismo (cambió cual es su next).
+                     
+        }
+        else{
+            prev = row;
+            row = sig;
+        }
+        cont_rows++; //Refiere a la posición original de la fila. Suma aunque la borre, para que las partículas salgan en su lugar (ver la llamada a gameBoardAddParticle)
+    }
+
+    //Para no afectar cont_rows ni a la variable prev del primer ciclo, agrego todas las nuevas filas en un ciclo separado.
+    int k = 0;
+    while(k<cont_rows_deleted){
+        RowNode* new_row = (RowNode*)malloc(sizeof(RowNode)); //Creo un nuevo nodo por cada uno borrado en el anterior ciclo.
+        if(new_row == NULL){ //Devuelve la cantidad de filas eliminadas. No quedarían 20 filas (no se crearían las eliminadas).
+            return cont_rows_deleted;
+        }
+        int i = 0;
+        while(i<GRID_COLS){ //Establezco en blanco a todas las columnas.
+            new_row->cells[i] = 0;
+            i++;
+        }
+        //Pongo al nuevo nodo en la primera posición.
+        new_row->next = board->first_row; 
+        board->first_row = new_row;
+        k++;
+    }
+
+    return cont_rows_deleted;
 }
 
 void gameBoardEnqueuePiece(GameBoard *board, int type)
