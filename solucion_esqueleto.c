@@ -284,7 +284,8 @@ void gameBoardAddParticle(GameBoard *board, float x, float y, int color)
         return;
     }
     ParticleNode *particula = (ParticleNode *)malloc(sizeof(ParticleNode)); // Creo el ParticleNode con memoria dinámica
-    if(particula==NULL){
+    if (particula == NULL)
+    {
         return;
     }
     // Inicializo x, y, velocidades aleatorias y un life_timer
@@ -302,7 +303,6 @@ void gameBoardAddParticle(GameBoard *board, float x, float y, int color)
 
     particula->next = board->first_particle; // Apunta al siguiente.
     board->first_particle = particula;       // El nodo particula es la cabeza de la lista, apuntado por first_particle
-
 }
 
 int gameBoardCheckAndClearLines(GameBoard *board)
@@ -313,62 +313,73 @@ int gameBoardCheckAndClearLines(GameBoard *board)
     // TODO: Insertar el nuevo RowNode en la CABEZA del tablero (board->first_row).
     // TODO: Por cada celda destruida, invocar a gameBoardAddParticle().
 
-    if(board==NULL){ //Tolera board NULL.
+    if (board == NULL)
+    { // Tolera board NULL.
         return 0;
     }
-    RowNode* row = board->first_row;
-    RowNode* prev = NULL;
-    int cont_rows = 0; 
-    int cont_rows_deleted = 0; 
-    while (row!=NULL){
-        RowNode* sig = row->next;
-           
+    RowNode *row = board->first_row;
+    RowNode *prev = NULL;
+    int cont_rows = 0;
+    int cont_rows_deleted = 0;
+    while (row != NULL)
+    {
+        RowNode *sig = row->next;
+
         int cont_cols = 0;
-        for(int j = 0; j<GRID_COLS; j++){ //Cuenta las columnas no nulas de cada fila.
-            if(row->cells[j]>0){
+        for (int j = 0; j < GRID_COLS; j++)
+        { // Cuenta las columnas no nulas de cada fila.
+            if (row->cells[j] > 0)
+            {
                 cont_cols++;
             }
         }
-        
-        if(cont_cols==GRID_COLS){ //Convierto la fila en partículas y la saco de la lista.
+
+        if (cont_cols == GRID_COLS)
+        { // Convierto la fila en partículas y la saco de la lista.
             int col = 0;
-            while(col<GRID_COLS){
+            while (col < GRID_COLS)
+            {
                 gameBoardAddParticle(board, OFFSET_X + col * CELL_SIZE, OFFSET_Y + cont_rows * CELL_SIZE, row->cells[col]); // Convierto a las columnas y filas del tablero a píxeles con OFFSET y CELL_SIZE. El color es el valor de la celda.
                 col++;
             }
-                
-            if(prev==NULL){ //Chequeo si el elemento es el primero.
+
+            if (prev == NULL)
+            { // Chequeo si el elemento es el primero.
                 board->first_row = sig;
             }
-            else{
-            prev->next = sig;
+            else
+            {
+                prev->next = sig;
             }
-            free(row); 
+            free(row);
             cont_rows_deleted++;
-            row = sig; //prev no se actualiza al borrar el nodo, pues el nodo anterior sigue siendo el mismo (cambió cual es su next).
-                     
+            row = sig; // prev no se actualiza al borrar el nodo, pues el nodo anterior sigue siendo el mismo (cambió cual es su next).
         }
-        else{
+        else
+        {
             prev = row;
             row = sig;
         }
-        cont_rows++; //Refiere a la posición original de la fila. Suma aunque la borre, para que las partículas salgan en su lugar (ver la llamada a gameBoardAddParticle)
+        cont_rows++; // Refiere a la posición original de la fila. Suma aunque la borre, para que las partículas salgan en su lugar (ver la llamada a gameBoardAddParticle)
     }
 
-    //Para no afectar cont_rows ni a la variable prev del primer ciclo, agrego todas las nuevas filas en un ciclo separado.
+    // Para no afectar cont_rows ni a la variable prev del primer ciclo, agrego todas las nuevas filas en un ciclo separado.
     int k = 0;
-    while(k<cont_rows_deleted){
-        RowNode* new_row = (RowNode*)malloc(sizeof(RowNode)); //Creo un nuevo nodo por cada uno borrado en el anterior ciclo.
-        if(new_row == NULL){ //Devuelve la cantidad de filas eliminadas. No quedarían 20 filas (no se crearían las eliminadas).
+    while (k < cont_rows_deleted)
+    {
+        RowNode *new_row = (RowNode *)malloc(sizeof(RowNode)); // Creo un nuevo nodo por cada uno borrado en el anterior ciclo.
+        if (new_row == NULL)
+        { // Devuelve la cantidad de filas eliminadas. No quedarían 20 filas (no se crearían las eliminadas).
             return cont_rows_deleted;
         }
         int i = 0;
-        while(i<GRID_COLS){ //Establezco en blanco a todas las columnas.
+        while (i < GRID_COLS)
+        { // Establezco en blanco a todas las columnas.
             new_row->cells[i] = 0;
             i++;
         }
-        //Pongo al nuevo nodo en la primera posición.
-        new_row->next = board->first_row; 
+        // Pongo al nuevo nodo en la primera posición.
+        new_row->next = board->first_row;
         board->first_row = new_row;
         k++;
     }
@@ -382,7 +393,7 @@ void gameBoardEnqueuePiece(GameBoard *board, int type)
     {
         return;
     }
-    PieceQueueNode *filanode = (PieceQueueNode*)malloc(sizeof(PieceQueueNode));
+    PieceQueueNode *filanode = (PieceQueueNode *)malloc(sizeof(PieceQueueNode));
     filanode->type = type; // Creo el PieceQueueNode con el 'type'
     filanode->next = NULL; // Lo inicializo con NULL asi no queda memoria basura. Como es el último elemento, su next es NULL
 
@@ -390,13 +401,13 @@ void gameBoardEnqueuePiece(GameBoard *board, int type)
 
     if (board->queue_head == NULL)
     {
-    // Caso 1: la cola está vacía
+        // Caso 1: la cola está vacía
         board->queue_head = filanode;
         board->queue_tail = filanode;
-    } 
-    else 
+    }
+    else
     {
-    // Caso 2: la cola no está vacía
+        // Caso 2: la cola no está vacía
         board->queue_tail->next = filanode; // Conecto filanode al final
         board->queue_tail = filanode;       // Actualizo
     }
@@ -656,7 +667,7 @@ void correrTests()
     assert(strCompare("b", "c") == 1);
     assert(strCompare("c", "b") == -1);
 
-    //  - strConcatenate: "" + "abc" y "hola " + "mundo". Los argumentos deben crearse con
+    //  - strConcatenate: "" + "abc" y "holaa " + "mundo". Los argumentos deben crearse con
     //    strDuplicate, porque strConcatenate los libera (no pasar literales).
     char *palabra1 = strDuplicate("");
     char *palabra2 = strDuplicate("abc");
@@ -664,15 +675,15 @@ void correrTests()
     assert(strCompare(s4, "abc") == 0);
     free(s4);
 
-    char *palabra3 = strDuplicate("hola");
+    char *palabra3 = strDuplicate("holaa");
     char *palabra4 = strDuplicate("mundo");
     char *s5 = strConcatenate(palabra3, palabra4);
-    assert(strCompare(s5, "holamundo") == 0);
+    assert(strCompare(s5, "holaamundo") == 0);
     free(s5);
 
     //  - Cola: 5 push y 6 pop; el 6to debe devolver 0 y dejar queue_head y queue_tail en NULL.
     GameBoard *board = gameBoardNew();
- 
+
     assert(board->queue_head == NULL);
     assert(board->queue_tail == NULL);
 
@@ -726,28 +737,59 @@ void correrTests()
 
     GameBoard *board2 = gameBoardNew();
     RowNode *fila19 = getRowAt(board2, 19);
-    for (int i=0; i<10; i++) {
+    for (int i = 0; i < 10; i++)
+    {
         fila19->cells[i] = 1;
     }
 
     assert(gameBoardCheckAndClearLines(board2) == 1);
 
     RowNode *fila1 = board2->first_row;
-    for (int i=0; i<10; i++) {
+    for (int i = 0; i < 10; i++)
+    {
         assert(fila1->cells[i] == 0);
     }
 
     int contador = 0;
     RowNode *actual = board2->first_row;
 
-    while (actual != NULL) {
-     contador++;
-     actual = actual->next;
+    while (actual != NULL)
+    {
+        contador++;
+        actual = actual->next;
     }
 
     assert(contador == 20);
 
     gameBoardDelete(board2);
+
+    // Crear filas 0 y 1 y borrarlas.
+
+    GameBoard *board3 = gameBoardNew();
+
+    RowNode *fila0 = getRowAt(board3, 0);
+    RowNode *fila1 = getRowAt(board3, 1);
+
+    for (int i = 0; i < 10; i++)
+    {
+        fila0->cells[i] = 1;
+        fila1->cells[i] = 1;
+    }
+
+    assert(gameBoardCheckAndClearLines(board3) == 2);
+
+    int contador3 = 0;
+    RowNode *actual3 = board3->first_row;
+
+    while (actual3 != NULL)
+    {
+        contador3++;
+        actual3 = actual3->next;
+    }
+
+    assert(contador3 == 20);
+
+    gameBoardDelete(board3);
 
     // Liberar toda la memoria pedida en los tests (strings y tableros).
 }
