@@ -94,11 +94,12 @@ char *strDuplicate(char *src)
 {
     // TODO: Contar los caracteres de src, reservar con malloc (no olvidar el '\0'),
     //       copiar todo y devolver el puntero nuevo.
-    int len = lenstr(src);
-    if (src == 0) // Devuelve 0 si el src es vacío.
+    if (src == NULL)
     {
-        return 0;
+        return NULL;
     }
+    int len = lenstr(src);
+
     char *res = (char *)malloc(sizeof(char) * (len + 1)); // Pido memoria para alojar el string resultado de largo len+1 (por el \0)
     if (res == NULL)
     { // Devuelve 0 si no hay memoria disponible para alojar res.
@@ -394,6 +395,10 @@ void gameBoardEnqueuePiece(GameBoard *board, int type)
         return;
     }
     PieceQueueNode *filanode = (PieceQueueNode *)malloc(sizeof(PieceQueueNode));
+    if (filanode == NULL)
+    {
+        return;
+    }
     filanode->type = type; // Creo el PieceQueueNode con el 'type'
     filanode->next = NULL; // Lo inicializo con NULL asi no queda memoria basura. Como es el último elemento, su next es NULL
 
@@ -767,13 +772,13 @@ void correrTests()
 
     GameBoard *board3 = gameBoardNew();
 
-    RowNode *fila0 = getRowAt(board3, 0);
-    RowNode *fila1 = getRowAt(board3, 1);
+    RowNode *fila0d = getRowAt(board3, 0);
+    RowNode *fila1d = getRowAt(board3, 1);
 
     for (int i = 0; i < 10; i++)
     {
-        fila0->cells[i] = 1;
-        fila1->cells[i] = 1;
+        fila0d->cells[i] = 1;
+        fila1d->cells[i] = 1;
     }
 
     assert(gameBoardCheckAndClearLines(board3) == 2);
