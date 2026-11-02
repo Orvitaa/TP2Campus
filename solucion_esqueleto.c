@@ -92,8 +92,7 @@ int lenstr(char *str)
 }
 char *strDuplicate(char *src)
 {
-    // TODO: Contar los caracteres de src, reservar con malloc (no olvidar el '\0'),
-    //       copiar todo y devolver el puntero nuevo.
+
     if (src == NULL)
     {
         return NULL;
@@ -117,8 +116,6 @@ char *strDuplicate(char *src)
 
 int strCompare(char *s1, char *s2)
 {
-    // TODO: Devolver 0 si son iguales, 1 si s1 < s2, -1 si s1 > s2.
-    //       Ojo: es la convencion INVERSA a strcmp.
     int i = 0;
     while (s1[i] == s2[i] && s1[i] != 0) // Aumenta la posición mientras los caracteres sean iguales y ningun string termine
     {
@@ -138,8 +135,6 @@ int strCompare(char *s1, char *s2)
 
 char *strConcatenate(char *src1, char *src2)
 {
-    // TODO: Reservar un string nuevo con src1 seguido de src2, y liberar src1 y src2.
-    //       Precondicion: src1 y src2 vienen de malloc y son punteros distintos.
     if (src1 == NULL || src2 == NULL)
     {
         free(src1);
@@ -183,10 +178,6 @@ char *strConcatenate(char *src1, char *src2)
 
 GameBoard *gameBoardNew()
 {
-    // TODO: Reservar memoria para el GameBoard.
-    // TODO: Usar un bucle para hacer malloc de las 20 filas (RowNode) y conectarlas.
-    // TODO: El puntero first_row debe apuntar al primero de esos nodos.
-    // TODO: Inicializar queue_head, queue_tail y first_particle en NULL.
     GameBoard *nuevo_gameBoard = (GameBoard *)malloc(sizeof(GameBoard)); // Pido memoria para un gameBoard.
     if (nuevo_gameBoard == NULL)
     {
@@ -236,11 +227,6 @@ GameBoard *gameBoardNew()
 
 void gameBoardDelete(GameBoard *board)
 {
-    // TODO: Debe tolerar board == NULL.
-    // TODO: Recorrer y liberar todos los RowNode con free().
-    // TODO: Recorrer y liberar todos los PieceQueueNode.
-    // TODO: Recorrer y liberar todos los ParticleNode.
-    // TODO: Finalmente, liberar la estructura GameBoard.
     if (board == NULL)
     { // Soporta board == NULL
         free(board);
@@ -308,12 +294,6 @@ void gameBoardAddParticle(GameBoard *board, float x, float y, int color)
 
 int gameBoardCheckAndClearLines(GameBoard *board)
 {
-    // TODO: Recorrer la lista de RowNode.
-    // TODO: Si un RowNode tiene todas sus celdas > 0, desenlazarlo y hacer free().
-    // TODO: Crear un nuevo RowNode vacío (lleno de ceros).
-    // TODO: Insertar el nuevo RowNode en la CABEZA del tablero (board->first_row).
-    // TODO: Por cada celda destruida, invocar a gameBoardAddParticle().
-
     if (board == NULL)
     { // Tolera board NULL.
         return 0;
@@ -420,9 +400,6 @@ void gameBoardEnqueuePiece(GameBoard *board, int type)
 
 int gameBoardDequeuePiece(GameBoard *board, int *out_type)
 {
-    // TODO: Si la cola está vacía, retornar 0.
-    // TODO: Extraer el primer nodo (queue_head).
-    // TODO: Guardar el type en la variable out_type, liberar el nodo y actualizar el head.
     if (board->queue_head == NULL)
     {
         return 0;
@@ -652,8 +629,6 @@ int inicializar()
 
 void correrTests()
 {
-    // TODO: Implementar los casos minimos del enunciado. Por ejemplo:
-    //  - strDuplicate: "", "x", un string con distintos caracteres.
     char *s1 = strDuplicate("");
     assert(strCompare(s1, "") == 0);
     free(s1);
